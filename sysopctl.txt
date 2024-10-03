@@ -1,0 +1,107 @@
+#!/bin/bash
+
+function backup_files {
+    local path=$1
+    rsync -avh "$path" /backup/
+}
+
+function monitor_processes {
+    top
+}
+
+function analyze_logs {
+    journalctl -p crit
+}
+
+
+# Function to start/stop a service
+function manage_service {
+    local action=$1
+    local service=$2
+    if [ "$action" == "start" ]; then
+        systemctl start "$service"
+        echo "$service started"
+    elif [ "$action" == "stop" ]; then
+        systemctl stop "$service"
+        echo "$service stopped"
+    else
+        echo "Invalid action. Use start or stop."
+    fi
+}
+
+# Function to display help information
+function display_help {
+    echo "Usage: sysopcti [OPTIONS] COMMAND"
+    echo "Options:"
+    echo "  --help       Display this help message"
+    echo "  --version    Show version information"
+    echo "Commands:"
+    echo "  service list         List active services"
+    echo "  system load          View system load"
+    echo "  disk usage           Check disk usage"
+}
+
+# Function to display the version of the script
+function display_version {
+    echo "sysopcti version 0.1.0"
+}
+
+# Function to list running services
+function list_services {
+    systemctl list-units --type=service
+}
+
+# Function to check system load
+function system_load {
+    uptime
+}
+
+# Function to check disk usage
+function check_disk_usage {
+    df -h
+}
+
+# Main script logic to handle commands
+case "$1" in
+    --help)
+        display_help
+        ;;
+    --version)
+        display_version
+        ;;
+    service)
+    if [ "$2" == "list" ]; then
+        list_services
+    elif [ "$2" == "start" ] || [ "$2" == "stop" ]; then
+        manage_service "$2" "$3"
+    else
+        echo "Invalid service command"
+    fi
+    ;;
+    system)
+        if [ "$2" == "load" ]; then
+            system_load
+        fi
+        ;;
+    logs)
+    if [ "$2" == "analyze" ]; then
+        analyze_logs
+    fi
+    ;;
+    process)
+    if [ "$2" == "monitor" ]; then
+        monitor_processes
+    fi
+    ;;
+    backup)
+    backup_files "$2"
+    ;;
+    disk)
+        if [ "$2" == "usage" ]; then
+            check_disk_usage
+        fi
+        ;;
+    *)
+        echo "Invalid command. Use --help for usage information."
+        ;;
+esac

@@ -1,0 +1,18 @@
+.TH SYSOPCTI "1" "October 2024" "sysopcti v0.1.0" "User Commands"
+.SH NAME
+sysopcti \- A command to manage system services, processes, and system health
+.SH SYNOPSIS
+sysopcti [OPTIONS] COMMAND
+.SH DESCRIPTION
+sysopcti provides system administration utilities such as listing services, checking system load, managing services, etc.
+.SH OPTIONS
+.TP
+--help
+Displays help information.
+.TP
+--version
+Shows the current version of sysopcti.
+.SH EXAMPLES
+List running services:
+.RS
+sysopcti service list
